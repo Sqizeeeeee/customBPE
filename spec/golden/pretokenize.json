@@ -1,0 +1,13 @@
+{
+  "pattern_file": "spec/pattern.txt",
+  "cases": [
+    {"text": "Hello world",     "chunks": ["Hello", " world"]},
+    {"text": "don't",           "chunks": ["don", "'t"]},
+    {"text": "Привет, мир!",    "chunks": ["Привет", ",", " мир", "!"]},
+    {"text": "a1b",             "chunks": ["a", "1", "b"]},
+    {"text": "x\n\ny",          "chunks": ["x", "\n", "\n", "y"]},
+    {"text": "  two",           "chunks": [" ", " two"]},
+    {"text": "😀!",             "chunks": ["😀!"]},
+    {"text": "",                "chunks": []}
+  ]
+}

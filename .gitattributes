@@ -1,0 +1,2 @@
+data/corpus/en_100mb.txt filter=lfs diff=lfs merge=lfs -text
+data/corpus/ru_100mb.txt filter=lfs diff=lfs merge=lfs -text
