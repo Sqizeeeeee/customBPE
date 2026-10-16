@@ -53,20 +53,13 @@ def load_tokenizer(path: str) -> dict:
 
     Возвращает словарь с полями: pattern, vocab_size, merges (список кортежей),
     vocab (список bytes), special_tokens.
-
-    Проверки (при нарушении падать с понятной ошибкой, например ValueError):
-      1. version == 1;
-      2. len(vocab) == 256 + len(merges);
-      3. vocab[i] для i < 256 это один байт со значением i;
-      4. vocab[256 + k] == vocab[merges[k][0]] + vocab[merges[k][1]];
-      5. в merges[k] оба id строго меньше 256 + k.
     """
 
     with open(path, 'r', encoding='utf-8') as f:
 
         data = json.load(f)
 
-        if not data['version'] == 1:
+        if data['version'] != 1:
             raise ValueError('version must be 1')
 
         vocab_len = len(data['vocab'])
@@ -78,6 +71,22 @@ def load_tokenizer(path: str) -> dict:
         vocab_bytes = [bytes.fromhex(h) for h in data['vocab']]
 
         if not all(vocab_bytes[i] == bytes([i]) for i in range(256)):
-            raise ValueError("firts 256 tokens must be bytes from 0 to 255")
+            raise ValueError("first 256 tokens must be bytes from 0 to 255")
 
-    pass
+        merges = [tuple(m) for m in data['merges']]
+
+        for k, (a, b) in enumerate(merges):
+
+            if (not (0 <= a < 256 + k)) or (not (0 <= b < 256 + k)):
+                raise ValueError(f"merge {k}: ids {(a, b)} must be in [0, {256 + k})")
+
+            if vocab_bytes[256 + k] != vocab_bytes[a] + vocab_bytes[b]:
+                raise ValueError(f"vocab[{256 + k}] != vocab[{a}] + vocab[{b}]")
+            
+        return {
+            'pattern': data['pattern'],
+            'vocab_size': data['vocab_size'],
+            'merges': merges,
+            'vocab': vocab_bytes,
+            'special_tokens': data['special_tokens']
+        }
