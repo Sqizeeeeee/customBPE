@@ -29,6 +29,7 @@ pytest==9.1.1
 python-dateutil==2.9.0.post0
 PyYAML==6.0.3
 regex==2026.9.29
+ruff==0.17.1
 six==1.17.0
 tqdm==4.70.1
 truststore==0.10.4

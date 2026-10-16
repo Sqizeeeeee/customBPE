@@ -1,7 +1,6 @@
 import json
 
 import pytest
-
 from bpe.io import load_tokenizer, save_tokenizer
 
 
